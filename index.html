@@ -1,348 +1,377 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>bãnbou — 6 meses</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --y: #ffb300;
-      --bg: #fffaf8;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      background: var(--bg);
-      font-family: Inter, system-ui, sans-serif;
-      color: #111;
-    }
-
-    .app {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 1rem;
-    }
-
-    header {
-      width: 100%;
-      max-width: 420px;
-      background: var(--y);
-      border-radius: 16px;
-      padding: .5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 18px rgba(0,0,0,.08);
-      margin-bottom: 1rem;
-    }
-
-    .stage {
-      position: relative;
-      width: 100%;
-      max-width: 420px;
-      height: 70vh;
-    }
-
-    .card {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,.15);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      transition: transform .3s ease, opacity .3s ease;
-      background: #fff;
-    }
-
-    .card img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .info {
-      position: relative;
-      z-index: 2;
-      padding: 1rem;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,.6));
-      color: #fff;
-    }
-
-    .controls {
-      display: flex;
-      gap: 40px;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-
-    .btn {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: none;
-      background: #fff;
-      box-shadow: 0 4px 10px rgba(0,0,0,.12);
-      font-size: 1.6rem;
-      cursor: pointer;
-    }
-
-    .btn.like { color: #2ecc71; }
-    .btn.nope { color: #ff5c5c; }
-
-    .match {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,.7);
-      z-index: 100;
-    }
-
-    .match.show { display: flex; }
-
-    .match-box {
-      background: #fff;
-      padding: 1rem;
-      border-radius: 14px;
-      text-align: center;
-      width: 90%;
-      max-width: 360px;
-    }
-
-    .match-photos {
-      display: flex;
-      justify-content: center;
-      gap: .5rem;
-      margin: 1rem 0;
-    }
-
-    .match-photos img {
-      width: 45%;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-
-    .chat {
-      display: none;
-      flex-direction: column;
-      position: fixed;
-      inset: 0;
-      background: #fff;
-      z-index: 200;
-    }
-
-    .chat.show { display: flex; }
-
-    .chat-header {
-      background: linear-gradient(90deg, var(--y), #f8c64f);
-      padding: .8rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .chat-body {
-      flex: 1;
-      overflow: auto;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-    }
-
-    /* bolha da mensagem */
-    .bubble {
-      max-width: 85%;
-      padding: .8rem 1rem;
-      border-radius: 14px;
-      font-size: .95rem;
-      line-height: 1.4;
-      background: var(--y);
-      color: #111;
-      border-bottom-right-radius: 5px;
-      opacity: 0;
-      transform: translateY(12px);
-      animation: fadeInMsg 0.8s ease forwards;
-      animation-delay: 0.4s;
-    }
-
-    @keyframes fadeInMsg {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .bubble a {
-      color: #007aff;
-      text-decoration: none;
-      font-weight: 600;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>bãnbou — 6 meses</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--y:#ffb300;--bg:#fffaf8;--danger:#c62828}
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111}
+  /* START */
+  .start-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fffaf8,#fff4e6);z-index:900}
+  .start-box{background:#fff;padding:24px;border-radius:14px;max-width:92vw;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.12)}
+  .start-btn{background:var(--y);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
+  /* APP */
+  .app{display:flex;flex-direction:column;align-items:center;padding:12px 12px 40px}
+  header{width:100%;max-width:420px;margin-top:8px;margin-bottom:12px}
+  .logo{display:flex;align-items:center;gap:10px;justify-content:center}
+  /* ALERT BANNER (ameaçador) */
+  .alert-banner{position:fixed;top:12px;left:50%;transform:translateX(-50%) translateY(-120%);background:var(--danger);color:#fff;padding:14px 20px;border-radius:10px;font-weight:800;letter-spacing:1px;z-index:950;box-shadow:0 10px 30px rgba(0,0,0,.28);opacity:0;transition:transform .28s cubic-bezier(.2,.9,.2,1),opacity .28s ease}
+  .alert-banner.show{transform:translateX(-50%) translateY(0);opacity:1;animation:shake .5s}
+  @keyframes shake{10%{transform:translateX(-50%) translateY(0) rotate(-1.5deg)}30%{transform:translateX(-50%) translateY(0) rotate(1.5deg)}50%{transform:translateX(-50%) translateY(0) rotate(-1deg)}70%{transform:translateX(-50%) translateY(0) rotate(1deg)}90%{transform:translateX(-50%) translateY(0) rotate(-.5deg)}}
+  /* DECK */
+  .stage{position:relative;width:100%;max-width:420px;height:68vh}
+  .card{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 14px 36px rgba(0,0,0,.12);display:flex;flex-direction:column;justify-content:flex-end;transition:transform .36s ease,opacity .36s ease;touch-action:none}
+  .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .info{position:relative;z-index:2;padding:16px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.6));color:#fff}
+  .info h3{margin:0 0 6px}
+  .info p{margin:0;color:#eee;font-size:.95rem}
+  .controls{display:flex;gap:36px;justify-content:center;margin-top:12px}
+  .btn{width:64px;height:64px;border-radius:50%;border:none;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.12);font-size:1.6rem;cursor:pointer}
+  .btn.nope{color:#ff5c5c}.btn.like{color:#27ae60}
+  /* MATCH */
+  .match{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);z-index:800}
+  .match.show{display:flex}
+  .match-box{background:#fff;padding:16px;border-radius:12px;text-align:center;width:92%;max-width:380px}
+  .match-photos{display:flex;gap:8px;justify-content:center;margin:12px 0}
+  .match-photos img{width:46%;border-radius:10px;object-fit:cover}
+  /* CHAT */
+  .chat{position:fixed;inset:0;display:none;flex-direction:column;background:#fff;z-index:820}
+  .chat.show{display:flex}
+  .chat-header{display:flex;align-items:center;gap:12px;padding:12px;background:linear-gradient(90deg,var(--y),#f7c96a);font-weight:700}
+  .chat-avatar{width:44px;height:44px;border-radius:10px;overflow:hidden;flex:0 0 44px}
+  .chat-title{display:flex;flex-direction:column}
+  .chat-title .name{font-weight:700}
+  .chat-title .status{font-size:.85rem;color:#333;opacity:.95}
+  .chat-body{flex:1;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+  .typing-bubble{align-self:flex-start;background:#f0f0f0;color:#111;padding:8px 12px;border-radius:14px;border-bottom-left-radius:6px;display:flex;align-items:center;gap:8px}
+  .dots{width:32px;display:flex;gap:4px;align-items:center}
+  .dot{width:6px;height:6px;border-radius:50%;background:#bbb;opacity:.7;transform:translateY(0);animation:dot 1s infinite}
+  .dot:nth-child(2){animation-delay:.12s}.dot:nth-child(3){animation-delay:.24s}
+  @keyframes dot{0%{opacity:.2;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}100%{opacity:.2;transform:translateY(0)}}
+  .bubble-recv{align-self:flex-start;background:#fff;padding:12px;border-radius:14px;border:1px solid #eee;max-width:82%;color:#111}
+  .bubble-recv a{color:#007aff;text-decoration:none;font-weight:600}
+  .chat-close{margin-left:auto;border:none;background:transparent;font-size:1.2rem;cursor:pointer}
+  @media(min-width:520px){.stage{height:72vh}.card{border-radius:20px}}
+</style>
 </head>
-
 <body>
-<div class="app">
+
+<!-- ALERT BANNER -->
+<div id="alertBanner" class="alert-banner" role="status" aria-live="assertive">ALERTA — NÃO É O TUMATI</div>
+
+<!-- START SCREEN -->
+<div class="start-screen" id="startScreen" role="dialog" aria-modal="true">
+  <div class="start-box">
+    <h1>Bem-vinda ao bãnbou 💛</h1>
+    <p>Surpresa do Tomatinho — toca em começar pra ver.</p>
+    <button class="start-btn" id="startBtn">Começar</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" aria-hidden="true">
   <header>
-    <!-- 🐝 LOGO PARÓDIA -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" width="180" height="50">
-      <rect x="0" y="0" width="420" height="120" rx="22" ry="22" fill="#ffb300"/>
-      <text x="40" y="75" font-family="Comic Sans MS, Comic Sans, cursive"
-            font-weight="700" font-size="56" fill="#111">bãnbou</text>
-      <g transform="translate(320,58)">
-        <ellipse cx="-14" cy="-12" rx="12" ry="6" fill="#fff8"/>
-        <ellipse cx="14" cy="-12" rx="12" ry="6" fill="#fff8"/>
-        <ellipse cx="0" cy="0" rx="20" ry="14" fill="#111"/>
-        <rect x="-10" y="-10" width="6" height="20" rx="2" fill="#ffb300"/>
-        <rect x="4" y="-10" width="6" height="20" rx="2" fill="#ffb300"/>
-        <circle cx="8" cy="-3" r="1.8" fill="#fff"/>
-        <path d="M-6,-12 C -8,-20 -2,-22 0,-16"
-              stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M0,-12 C 4,-20 10,-22 8,-16"
-              stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/>
-      </g>
-    </svg>
+    <div class="logo" aria-hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" width="180" height="50" role="img" aria-label="bãnbou">
+        <rect x="0" y="0" width="420" height="120" rx="22" ry="22" fill="#ffb300"/>
+        <text x="40" y="75" font-family="Comic Sans MS, Comic Sans, cursive" font-weight="700" font-size="56" fill="#111">bãnbou</text>
+        <g transform="translate(320,58)"><ellipse cx="-14" cy="-12" rx="12" ry="6" fill="#fff8"/><ellipse cx="14" cy="-12" rx="12" ry="6" fill="#fff8"/><ellipse cx="0" cy="0" rx="20" ry="14" fill="#111"/><rect x="-10" y="-10" width="6" height="20" rx="2" fill="#ffb300"/><rect x="4" y="-10" width="6" height="20" rx="2" fill="#ffb300"/><circle cx="8" cy="-3" r="1.8" fill="#fff"/><path d="M-6,-12 C -8,-20 -2,-22 0,-16" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M0,-12 C 4,-20 10,-22 8,-16" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+      </svg>
+    </div>
   </header>
 
-  <!-- 🔸 DECK DE PERFIS -->
-  <div class="stage" id="stage">
-
+  <!-- DECK (DOM order: bottom->top: tom -> joe -> serj -> kogos) -->
+  <div class="stage" id="stage" aria-live="polite">
+    <!-- TOMATINHO (fundo) -->
     <div class="card" data-id="tom" style="z-index:1">
+      <!-- 🔸 TROCAR AQUI: tomatinho.jpg -->
       <img src="tomatinho.jpg" alt="Tomatinho">
-      <div class="info">
-        <h3>Tomatinho, 26</h3>
-        <p>Fez este site por amor (e ironia). Na dúvida, escolha o Nabinho.</p>
-      </div>
+      <div class="info"><h3>Tomatinho, 26</h3><p>Fez este site por amor (e ironia). Na dúvida, escolha o Nabinho.</p></div>
     </div>
 
+    <!-- JOE -->
     <div class="card" data-id="joe" style="z-index:2">
+      <!-- 🔸 TROCAR AQUI: joe.jpg -->
       <img src="joe.jpg" alt="Joe Duplantier">
-      <div class="info">
-        <h3>Joe Duplantier, 44</h3>
-        <p>Gojira vibes — riffs e intensidade emocional.</p>
-      </div>
+      <div class="info"><h3>Joe Duplantier, 44</h3><p>Gojira vibes — riffs e intensidade emocional.</p></div>
     </div>
 
-    <div class="card" data-id="kogos" style="z-index:3">
-      <img src="kogos.jpg" alt="Paulo Kogos">
-      <div class="info">
-        <h3>Paulo Kogos, 39</h3>
-        <p>Perfil satírico — ideias e caos controlado.</p>
-      </div>
-    </div>
-
-    <div class="card" data-id="serj" style="z-index:4">
+    <!-- SERJ (2º) -->
+    <div class="card" data-id="serj" style="z-index:3">
+      <!-- 🔸 TROCAR AQUI: serj.jpg -->
       <img src="serj.jpg" alt="Serj Tankian">
-      <div class="info">
-        <h3>Serj Tankian, 57</h3>
-        <p>Voz e ideias — paixões musicais que confundem o algoritmo.</p>
-      </div>
+      <div class="info"><h3>Serj Tankian, 57</h3><p>Voz e ideias — paixões musicais que confundem o algoritmo.</p></div>
+    </div>
+
+    <!-- KOGOS (topo inicial) -->
+    <div class="card" data-id="kogos" style="z-index:4">
+      <!-- 🔸 TROCAR AQUI: kogos.jpg -->
+      <img src="kogos.jpg" alt="Paulo Kogos">
+      <div class="info"><h3>Paulo Kogos, 39</h3><p>Perfil satírico — ideias e caos controlado.</p></div>
     </div>
   </div>
 
-  <!-- CONTROLES -->
-  <div class="controls">
-    <button class="btn nope" id="btnNope">❌</button>
-    <button class="btn like" id="btnLike">❤️</button>
+  <div class="controls" aria-hidden>
+    <button class="btn nope" id="btnNope" aria-label="Nope">❌</button>
+    <button class="btn like" id="btnLike" aria-label="Like">❤️</button>
   </div>
 </div>
 
 <!-- MATCH -->
-<div class="match" id="match">
+<div class="match" id="match" role="dialog" aria-hidden="true">
   <div class="match-box">
     <h2>It's a Match 💛</h2>
     <p>O algoritmo do bãnbou é infalível.</p>
-
     <div class="match-photos">
+      <!-- 🔸 TROCAR AQUI: lara.jpg -->
       <img src="lara.jpg" alt="Lara">
+      <!-- 🔸 TROCAR AQUI: tomatinho.jpg -->
       <img src="tomatinho.jpg" alt="Tomatinho">
     </div>
-
-    <button class="btn" id="openChat"
-            style="background:var(--y);padding:.6rem 1rem;border-radius:10px;border:none;cursor:pointer;font-weight:600">
-      Ver mensagem
-    </button>
+    <button class="btn" id="openChat" style="background:var(--y);padding:.6rem 1rem;border-radius:10px;border:none;cursor:pointer;font-weight:600">Ver mensagem</button>
   </div>
 </div>
 
 <!-- CHAT -->
-<div class="chat" id="chat">
+<div class="chat" id="chat" role="dialog" aria-hidden="true">
   <div class="chat-header">
-    Mensagem recebida
-    <button id="closeChat" style="border:none;background:transparent;font-size:1.2rem;cursor:pointer">✕</button>
+    <div class="chat-avatar"><img id="chatAvatar" src="tomatinho.jpg" alt="Tomatinho" style="width:100%;height:100%;object-fit:cover"></div>
+    <div class="chat-title"><div class="name">Tomatinho</div><div class="status">ativo agora 💛</div></div>
+    <button class="chat-close" id="closeChat" aria-label="Fechar chat">✕</button>
   </div>
-
   <div class="chat-body" id="chatBody">
-    <div class="bubble">
+    <!-- typing -->
+    <div class="typing-bubble" id="typingBubble" style="display:none">
+      <div class="dots" aria-hidden><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <div style="font-size:.9rem;color:#555">digitando…</div>
+    </div>
+    <div class="bubble-recv" id="finalMsg" style="display:none">
       oi, aqui é o <s>careca</s> cabeludo que gosta de Gojira e System of a Down —
-      me chama no zap
-      <a href="https://wa.me/559912345678" target="_blank">91234-5678</a> 😎
+      me chama no zap <a id="waLink" href="https://wa.me/559912345678" target="_blank">91234-5678</a> 😎
     </div>
   </div>
 </div>
 
-<!-- ÁUDIO -->
+<!-- AUDIOS -->
 <audio id="serjAudio" src="serj.mp3" preload="auto"></audio>
+<audio id="notifAudio" src="notif.mp3" preload="auto"></audio>
 
 <script>
-  const cards = [...document.querySelectorAll('.card')];
-  const btnLike = document.getElementById('btnLike');
-  const btnNope = document.getElementById('btnNope');
-  const match = document.getElementById('match');
-  const openChat = document.getElementById('openChat');
-  const chat = document.getElementById('chat');
-  const closeChat = document.getElementById('closeChat');
-  const audio = document.getElementById('serjAudio');
-  let i = cards.length - 1;
+/* ---------------- CONFIG ---------------- */
+const ASSETS = {
+  serjAudioId: 'serjAudio',
+  notifAudioId: 'notifAudio',
+  tomImg: 'tomatinho.jpg'
+};
+/* -------------- ELEMENTS -------------- */
+const startScreen = document.getElementById('startScreen');
+const startBtn = document.getElementById('startBtn');
+const app = document.getElementById('app');
+const stage = document.getElementById('stage');
+let cards = Array.from(stage.querySelectorAll('.card')); // bottom -> top ordering
+let topIndex = cards.length - 1; // points to current top (kogos initially)
+const btnLike = document.getElementById('btnLike');
+const btnNope = document.getElementById('btnNope');
+const match = document.getElementById('match');
+const openChat = document.getElementById('openChat');
+const chat = document.getElementById('chat');
+const typingBubble = document.getElementById('typingBubble');
+const finalMsg = document.getElementById('finalMsg');
+const serjAudio = document.getElementById(ASSETS.serjAudioId);
+const notifAudio = document.getElementById(ASSETS.notifAudioId);
+const alertBanner = document.getElementById('alertBanner');
 
-  function nextCard(dir) {
-    if (i < 0) return;
-    const c = cards[i];
-    if (c.dataset.id === 'serj') {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-    c.style.transform = `translateX(${dir === 'right' ? 500 : -500}px) rotate(${dir === 'right' ? 15 : -15}deg)`;
-    c.style.opacity = 0;
+let audioUnlocked = false;
 
-    if (c.dataset.id === 'tom' && dir === 'right') {
-      setTimeout(() => match.classList.add('show'), 400);
+/* ---------- Helpers ---------- */
+function updateStackVisual(){
+  cards.forEach((el, idx)=>{
+    const pos = idx - topIndex;
+    if(pos < 0){
+      el.style.transform = 'translateX(-2000px)';
+      el.style.opacity = '0';
+    } else {
+      const ty = pos * 8;
+      const scale = 1 - pos*0.01;
+      el.style.transition = 'transform .28s ease, opacity .28s ease';
+      el.style.transform = `translateY(${ty}px) scale(${scale})`;
+      el.style.opacity = '1';
+      el.style.zIndex = String(100-pos);
     }
+  });
+}
 
-    i--;
-    if (cards[i] && cards[i].dataset.id === 'serj') {
-      audio.play();
-    }
+function unlockAudio(){
+  if(!audioUnlocked){
+    audioUnlocked = true;
+    // try play/pause to unlock mobile browsers
+    serjAudio.play().then(()=>serjAudio.pause()).catch(()=>{});
+    notifAudio.play().then(()=>notifAudio.pause()).catch(()=>{});
   }
+}
 
-  btnLike.onclick = () => nextCard('right');
-  btnNope.onclick = () => nextCard('left');
+function showAlert(text){
+  alertBanner.textContent = text || 'ALERTA — NÃO É O TUMATI';
+  alertBanner.classList.add('show');
+  setTimeout(()=> alertBanner.classList.remove('show'), 2000);
+}
 
-  openChat.onclick = () => {
-    match.classList.remove('show');
-    chat.classList.add('show');
-  };
+/* ---------- Swipe (drag) ---------- */
+let pointer = {down:false,sx:0,sy:0,cx:0,cy:0};
+const TH = 90; // threshold to trigger swipe
+function getTopCard(){ return cards[topIndex]; }
 
-  closeChat.onclick = () => chat.classList.remove('show');
+function onPointerDown(e){
+  pointer.down = true;
+  const p = e.touches?e.touches[0]:e;
+  pointer.sx = p.clientX; pointer.sy = p.clientY; pointer.cx = pointer.sx; pointer.cy = pointer.sy;
+  const t = getTopCard();
+  if(t) t.style.transition = 'none';
+}
+function onPointerMove(e){
+  if(!pointer.down) return;
+  const p = e.touches?e.touches[0]:e;
+  pointer.cx = p.clientX; pointer.cy = p.clientY;
+  const dx = pointer.cx - pointer.sx;
+  const dy = pointer.cy - pointer.sy;
+  const top = getTopCard();
+  if(!top) return;
+  const rot = dx*0.06;
+  top.style.transform = `translateX(${dx}px) translateY(${dy*0.4}px) rotate(${rot}deg)`;
+  top.style.opacity = 1 - Math.min(Math.abs(dx)/800, .4);
+}
+function onPointerUp(){
+  if(!pointer.down) return;
+  pointer.down = false;
+  const dx = pointer.cx - pointer.sx;
+  const abs = Math.abs(dx);
+  const dir = dx > 0 ? 'right' : 'left';
+  const top = getTopCard();
+  if(!top) return;
+  if(abs > TH){
+    // fly out
+    const offX = (dir === 'right') ? window.innerWidth*1.4 : -window.innerWidth*1.4;
+    top.style.transition = 'transform .5s cubic-bezier(.2,.9,.3,1), opacity .4s ease';
+    top.style.transform = `translateX(${offX}px) rotate(${dir==='right'?18:-18}deg)`;
+    top.style.opacity = 0;
+    // handle after animation
+    setTimeout(()=>{
+      const id = top.dataset.id;
+      // if liked non-tom => alert threatening
+      if(dir === 'right' && id !== 'tom'){
+        showAlert('ALERTA — NÃO É O TUMATI');
+      }
+      if(id === 'serj'){
+        try{ serjAudio.pause(); serjAudio.currentTime = 0; }catch(e){}
+      }
+      // match if liked tom
+      if(id === 'tom' && dir === 'right'){
+        setTimeout(()=> match.classList.add('show'), 380);
+      }
+      topIndex--;
+      updateStackVisual();
+      const newTop = cards[topIndex];
+      if(newTop && newTop.dataset.id === 'serj' && audioUnlocked){
+        serjAudio.currentTime = 0;
+        serjAudio.play().catch(()=>{});
+      }
+    }, 420);
+  } else {
+    // revert
+    top.style.transition = 'transform .28s cubic-bezier(.2,.9,.3,1)';
+    top.style.transform = 'translateY(0px) scale(1)';
+    top.style.opacity = 1;
+  }
+}
 
-  window.onload = () => {
-    if (cards[i] && cards[i].dataset.id === 'serj') {
-      audio.play();
+/* Attach pointer events */
+stage.addEventListener('pointerdown', onPointerDown, {passive:true});
+stage.addEventListener('pointermove', onPointerMove, {passive:true});
+window.addEventListener('pointerup', onPointerUp);
+stage.addEventListener('touchstart', onPointerDown, {passive:true});
+stage.addEventListener('touchmove', onPointerMove, {passive:true});
+window.addEventListener('touchend', onPointerUp);
+
+/* ---------- Buttons (simulate swipe) ---------- */
+function removeTop(direction){
+  const top = getTopCard();
+  if(!top) return;
+  // if leaving serj, stop audio
+  if(top.dataset.id === 'serj'){ try{ serjAudio.pause(); serjAudio.currentTime=0; }catch(e){} }
+  const offX = (direction==='right') ? window.innerWidth*1.4 : -window.innerWidth*1.4;
+  top.style.transition = 'transform .45s cubic-bezier(.2,.9,.3,1), opacity .36s ease';
+  top.style.transform = `translateX(${offX}px) rotate(${direction==='right'?18:-18}deg)`;
+  top.style.opacity = 0;
+  setTimeout(()=>{
+    // if liked non-tom => alert
+    if(direction === 'right' && top.dataset.id !== 'tom'){
+      showAlert('ALERTA — NÃO É O TUMATI');
     }
-  };
+    if(top.dataset.id === 'tom' && direction === 'right'){
+      setTimeout(()=> match.classList.add('show'),380);
+    }
+    topIndex--;
+    updateStackVisual();
+    const newTop = cards[topIndex];
+    if(newTop && newTop.dataset.id === 'serj' && audioUnlocked){
+      serjAudio.currentTime = 0;
+      serjAudio.play().catch(()=>{});
+    }
+  },420);
+}
+btnLike.addEventListener('click', ()=> removeTop('right'));
+btnNope.addEventListener('click', ()=> removeTop('left'));
+
+/* ---------- Start / audio unlock ---------- */
+startBtn.addEventListener('click', ()=>{
+  unlockAudio();
+  startScreen.style.display = 'none';
+  app.setAttribute('aria-hidden','false');
+  updateStackVisual();
+  // initial top is kogos, so serj not auto-play until it becomes top
+});
+
+/* ---------- Match -> Chat (typing -> notif -> message) ---------- */
+openChat.addEventListener('click', ()=>{
+  match.classList.remove('show');
+  chat.classList.add('show');
+  chat.setAttribute('aria-hidden','false');
+  // avatar auto set
+  document.getElementById('chatAvatar').src = ASSETS.tomImg;
+  // show typing, then notif sound, then final message
+  typingBubble.style.display = 'flex';
+  finalMsg.style.display = 'none';
+  setTimeout(()=>{
+    typingBubble.style.display = 'none';
+    if(audioUnlocked){
+      try{ notifAudio.currentTime = 0; notifAudio.play().catch(()=>{}); }catch(e){}
+    }
+    finalMsg.style.display = 'block';
+    finalMsg.style.opacity = '0';
+    finalMsg.style.transform = 'translateY(8px)';
+    setTimeout(()=>{ finalMsg.style.transition = 'opacity .45s ease, transform .45s ease'; finalMsg.style.opacity = '1'; finalMsg.style.transform = 'translateY(0)'; },40);
+  },2000);
+});
+
+/* close chat */
+document.getElementById('closeChat').addEventListener('click', ()=>{
+  chat.classList.remove('show');
+  chat.setAttribute('aria-hidden','true');
+});
+
+/* init */
+window.addEventListener('load', ()=>{
+  updateStackVisual();
+});
+
+/* keyboard testing */
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'ArrowRight') removeTop('right');
+  if(e.key === 'ArrowLeft') removeTop('left');
+});
 </script>
 </body>
 </html>
