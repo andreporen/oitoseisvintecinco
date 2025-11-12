@@ -9,22 +9,18 @@
   :root{--y:#ffb300;--bg:#fffaf8;--danger:#c62828}
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111}
-
   /* START */
   .start-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fffaf8,#fff4e6);z-index:900}
   .start-box{background:#fff;padding:24px;border-radius:14px;max-width:92vw;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.12)}
   .start-btn{background:var(--y);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
-
   /* APP */
   .app{display:flex;flex-direction:column;align-items:center;padding:12px 12px 40px}
   header{width:100%;max-width:420px;margin-top:8px;margin-bottom:12px}
   .logo{display:flex;align-items:center;gap:10px;justify-content:center}
-
   /* ALERT BANNER (ameaçador) */
   .alert-banner{position:fixed;top:12px;left:50%;transform:translateX(-50%) translateY(-120%);background:var(--danger);color:#fff;padding:14px 20px;border-radius:10px;font-weight:800;letter-spacing:1px;z-index:950;box-shadow:0 10px 30px rgba(0,0,0,.28);opacity:0;transition:transform .28s cubic-bezier(.2,.9,.2,1),opacity .28s ease}
   .alert-banner.show{transform:translateX(-50%) translateY(0);opacity:1;animation:shake .5s}
   @keyframes shake{10%{transform:translateX(-50%) translateY(0) rotate(-1.5deg)}30%{transform:translateX(-50%) translateY(0) rotate(1.5deg)}50%{transform:translateX(-50%) translateY(0) rotate(-1deg)}70%{transform:translateX(-50%) translateY(0) rotate(1deg)}90%{transform:translateX(-50%) translateY(0) rotate(-.5deg)}}
-
   /* DECK */
   .stage{position:relative;width:100%;max-width:420px;height:68vh}
   .card{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 14px 36px rgba(0,0,0,.12);display:flex;flex-direction:column;justify-content:flex-end;transition:transform .36s ease,opacity .36s ease;touch-action:none}
@@ -35,18 +31,15 @@
   .controls{display:flex;gap:36px;justify-content:center;margin-top:12px}
   .btn{width:64px;height:64px;border-radius:50%;border:none;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.12);font-size:1.6rem;cursor:pointer}
   .btn.nope{color:#ff5c5c}.btn.like{color:#27ae60}
-
   /* Fade-in visual when a card becomes active (we add class .fade-in) */
   .card.fade-in{animation:cardFadeIn .36s ease both}
   @keyframes cardFadeIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
-
   /* MATCH */
   .match{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);z-index:800}
   .match.show{display:flex}
   .match-box{background:#fff;padding:16px;border-radius:12px;text-align:center;width:92%;max-width:380px}
   .match-photos{display:flex;gap:8px;justify-content:center;margin:12px 0}
   .match-photos img{width:46%;border-radius:10px;object-fit:cover}
-
   /* CHAT */
   .chat{position:fixed;inset:0;display:none;flex-direction:column;background:#fff;z-index:820}
   .chat.show{display:flex}
@@ -64,7 +57,6 @@
   .bubble-recv{align-self:flex-start;background:#fff;padding:12px;border-radius:14px;border:1px solid #eee;max-width:82%;color:#111}
   .bubble-recv a{color:#007aff;text-decoration:none;font-weight:600}
   .chat-close{margin-left:auto;border:none;background:transparent;font-size:1.2rem;cursor:pointer}
-
   @media(min-width:520px){.stage{height:72vh}.card{border-radius:20px}}
 </style>
 </head>
@@ -77,7 +69,7 @@
 <div class="start-screen" id="startScreen" role="dialog" aria-modal="true">
   <div class="start-box">
     <h1>Bem-vinda ao bãnbou 💛</h1>
-    <p>abra se vc gosta de tumate.</p>
+    <p>Surpresa do Tomatinho — toca em começar pra ver.</p>
     <button class="start-btn" id="startBtn">Começar</button>
   </div>
 </div>
@@ -101,28 +93,28 @@
     <div class="card" data-id="tom" style="z-index:1">
       <!-- 🔸 TROCAR AQUI: tomatinho.jpg -->
       <img src="tomatinho.jpg" alt="Tomatinho">
-      <div class="info"><h3>Tomatinho, 19</h3><p>Ama a Lalinha em tempo integral, apreciador de nabos.</p></div>
+      <div class="info"><h3>Tomatinho, 26</h3><p>Fez este site por amor (e ironia). Na dúvida, escolha o Nabinho.</p></div>
     </div>
 
     <!-- JOE -->
     <div class="card" data-id="joe" style="z-index:2">
       <!-- 🔸 TROCAR AQUI: joe.jpg -->
       <img src="joe.jpg" alt="Joe Duplantier">
-      <div class="info"><h3>Joe Duplantier, 44</h3><p>oui oui madame baguette heavy metal</p></div>
+      <div class="info"><h3>Joe Duplantier, 44</h3><p>Gojira vibes — riffs e intensidade emocional.</p></div>
     </div>
 
     <!-- SERJ (2º) -->
     <div class="card" data-id="serj" style="z-index:3">
       <!-- 🔸 TROCAR AQUI: serj.jpg -->
       <img src="serj.jpg" alt="Serj Tankian">
-      <div class="info"><h3>Serj Tankian, 57</h3><p>BANANA BANANA BANANA BANANA TERRACOTA PIE.</p></div>
+      <div class="info"><h3>Serj Tankian, 57</h3><p>Voz e ideias — paixões musicais que confundem o algoritmo.</p></div>
     </div>
 
     <!-- KOGOS (topo inicial) -->
     <div class="card" data-id="kogos" style="z-index:4">
       <!-- 🔸 TROCAR AQUI: kogos.jpg -->
       <img src="kogos.jpg" alt="Paulo Kogos">
-      <div class="info"><h3>Paulo Kogos, 39</h3><p>perfil desativado - em relacionamento sério com nando moura.</p></div>
+      <div class="info"><h3>Paulo Kogos, 39</h3><p>Perfil satírico — ideias e caos controlado.</p></div>
     </div>
   </div>
 
@@ -183,8 +175,15 @@ const startScreen = document.getElementById('startScreen');
 const startBtn = document.getElementById('startBtn');
 const app = document.getElementById('app');
 const stage = document.getElementById('stage');
-let cards = Array.from(stage.querySelectorAll('.card')); // bottom -> top
-let topIndex = cards.length - 1; // current top (kogos)
+
+/* IMPORTANT: build cards array SORTED by style z-index
+   This guarantees the order (bottom->top) even on iOS where DOM order may act differently.
+   Ensure your HTML sets inline style z-index per card as in the template.
+*/
+let cards = Array.from(stage.querySelectorAll('.card'))
+  .sort((a,b) => Number(a.style.zIndex || 0) - Number(b.style.zIndex || 0)); // bottom->top
+let topIndex = cards.length - 1; // current top (kogos initially)
+
 const btnLike = document.getElementById('btnLike');
 const btnNope = document.getElementById('btnNope');
 const match = document.getElementById('match');
@@ -198,7 +197,7 @@ const alertBanner = document.getElementById('alertBanner');
 
 let audioUnlocked = false;
 
-/* reduce serj volume (lower) and ensure not looping */
+/* reduce serj volume and no loop */
 try{ serjAudio.volume = 0.35; serjAudio.loop = false; }catch(e){}
 
 /* ---------- helpers ---------- */
@@ -218,13 +217,23 @@ function updateStackVisual(){
     }
   });
 }
+
+/* Use Web Audio API resume to unlock audio on user interaction (iOS friendly).
+   We DO NOT play notifAudio here — only resume the context so later .play() calls work.
+*/
+let audioCtx = null;
 function unlockAudio(){
   if(!audioUnlocked){
     audioUnlocked = true;
-    serjAudio.play().then(()=>serjAudio.pause()).catch(()=>{});
-    notifAudio.play().then(()=>notifAudio.pause()).catch(()=>{});
+    // try to create/resume an AudioContext — this helps iOS allow later playback
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+    } catch(e){}
+    // do NOT play notif here; app will play sounds only on explicit actions below
   }
 }
+
 function showAlert(text){
   alertBanner.textContent = text || 'ALERTA — NÃO É O TUMATI';
   alertBanner.classList.add('show');
@@ -270,7 +279,7 @@ function onPointerUp(){
     top.style.transform = `translateX(${offX}px) rotate(${dir==='right'?18:-18}deg)`;
     top.style.opacity = 0;
 
-    // We wait the animation end before deciding to play Serj or alert.
+    // Wait the animation to finish (same timing as other flows)
     setTimeout(()=>{
       const id = top.dataset.id;
       // if liked non-tom => alert
@@ -321,7 +330,7 @@ window.addEventListener('touchend', onPointerUp);
 function removeTop(direction){
   const top = getTopCard();
   if(!top) return;
-  if(top.dataset.id === 'serj'){ try{ serjAudio.pause(); serjAudio.currentTime = 0; }catch(e){} }
+  if(top.dataset.id === 'serj'){ try{ serjAudio.pause(); serjAudio.currentTime=0; }catch(e){} }
   const offX = (direction==='right') ? window.innerWidth*1.4 : -window.innerWidth*1.4;
   top.style.transition = 'transform .45s cubic-bezier(.2,.9,.3,1), opacity .36s ease';
   top.style.transform = `translateX(${offX}px) rotate(${direction==='right'?18:-18}deg)`;
@@ -353,6 +362,10 @@ startBtn.addEventListener('click', ()=>{
   unlockAudio();
   startScreen.style.display = 'none';
   app.setAttribute('aria-hidden','false');
+
+  // rebuild cards array sorted by z-index (safety) and reset topIndex
+  cards = Array.from(stage.querySelectorAll('.card')).sort((a,b)=> Number(a.style.zIndex||0)-Number(b.style.zIndex||0));
+  topIndex = cards.length - 1;
   updateStackVisual();
 });
 
@@ -366,9 +379,9 @@ openChat.addEventListener('click', ()=>{
   finalMsg.style.display = 'none';
   setTimeout(()=>{
     typingBubble.style.display = 'none';
+    // play notif only here (after explicit user gesture unlocked audio)
     if(audioUnlocked){
-      notifAudio.currentTime = 0;
-      notifAudio.play().catch(()=>{});
+      try{ notifAudio.currentTime = 0; notifAudio.play().catch(()=>{}); }catch(e){}
     }
     finalMsg.style.display = 'block';
     finalMsg.style.opacity = '0';
@@ -384,7 +397,12 @@ document.getElementById('closeChat').addEventListener('click', ()=>{
 });
 
 /* init */
-window.addEventListener('load', ()=> updateStackVisual());
+window.addEventListener('load', ()=> {
+  // ensure cards sorted by z-index from the start
+  cards = Array.from(stage.querySelectorAll('.card')).sort((a,b)=> Number(a.style.zIndex||0)-Number(b.style.zIndex||0));
+  topIndex = cards.length - 1;
+  updateStackVisual();
+});
 
 /* keyboard testing (desktop) */
 window.addEventListener('keydown', (e)=>{
