@@ -9,18 +9,22 @@
   :root{--y:#ffb300;--bg:#fffaf8;--danger:#c62828}
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111}
+
   /* START */
   .start-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fffaf8,#fff4e6);z-index:900}
   .start-box{background:#fff;padding:24px;border-radius:14px;max-width:92vw;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.12)}
   .start-btn{background:var(--y);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
+
   /* APP */
   .app{display:flex;flex-direction:column;align-items:center;padding:12px 12px 40px}
   header{width:100%;max-width:420px;margin-top:8px;margin-bottom:12px}
   .logo{display:flex;align-items:center;gap:10px;justify-content:center}
+
   /* ALERT BANNER (ameaçador) */
   .alert-banner{position:fixed;top:12px;left:50%;transform:translateX(-50%) translateY(-120%);background:var(--danger);color:#fff;padding:14px 20px;border-radius:10px;font-weight:800;letter-spacing:1px;z-index:950;box-shadow:0 10px 30px rgba(0,0,0,.28);opacity:0;transition:transform .28s cubic-bezier(.2,.9,.2,1),opacity .28s ease}
   .alert-banner.show{transform:translateX(-50%) translateY(0);opacity:1;animation:shake .5s}
   @keyframes shake{10%{transform:translateX(-50%) translateY(0) rotate(-1.5deg)}30%{transform:translateX(-50%) translateY(0) rotate(1.5deg)}50%{transform:translateX(-50%) translateY(0) rotate(-1deg)}70%{transform:translateX(-50%) translateY(0) rotate(1deg)}90%{transform:translateX(-50%) translateY(0) rotate(-.5deg)}}
+
   /* DECK */
   .stage{position:relative;width:100%;max-width:420px;height:68vh}
   .card{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 14px 36px rgba(0,0,0,.12);display:flex;flex-direction:column;justify-content:flex-end;transition:transform .36s ease,opacity .36s ease;touch-action:none}
@@ -31,12 +35,18 @@
   .controls{display:flex;gap:36px;justify-content:center;margin-top:12px}
   .btn{width:64px;height:64px;border-radius:50%;border:none;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.12);font-size:1.6rem;cursor:pointer}
   .btn.nope{color:#ff5c5c}.btn.like{color:#27ae60}
+
+  /* Fade-in visual when a card becomes active (we add class .fade-in) */
+  .card.fade-in{animation:cardFadeIn .36s ease both}
+  @keyframes cardFadeIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+
   /* MATCH */
   .match{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);z-index:800}
   .match.show{display:flex}
   .match-box{background:#fff;padding:16px;border-radius:12px;text-align:center;width:92%;max-width:380px}
   .match-photos{display:flex;gap:8px;justify-content:center;margin:12px 0}
   .match-photos img{width:46%;border-radius:10px;object-fit:cover}
+
   /* CHAT */
   .chat{position:fixed;inset:0;display:none;flex-direction:column;background:#fff;z-index:820}
   .chat.show{display:flex}
@@ -54,6 +64,7 @@
   .bubble-recv{align-self:flex-start;background:#fff;padding:12px;border-radius:14px;border:1px solid #eee;max-width:82%;color:#111}
   .bubble-recv a{color:#007aff;text-decoration:none;font-weight:600}
   .chat-close{margin-left:auto;border:none;background:transparent;font-size:1.2rem;cursor:pointer}
+
   @media(min-width:520px){.stage{height:72vh}.card{border-radius:20px}}
 </style>
 </head>
@@ -75,6 +86,7 @@
 <div class="app" id="app" aria-hidden="true">
   <header>
     <div class="logo" aria-hidden>
+      <!-- inline logo paródia -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" width="180" height="50" role="img" aria-label="bãnbou">
         <rect x="0" y="0" width="420" height="120" rx="22" ry="22" fill="#ffb300"/>
         <text x="40" y="75" font-family="Comic Sans MS, Comic Sans, cursive" font-weight="700" font-size="56" fill="#111">bãnbou</text>
@@ -155,24 +167,24 @@
   </div>
 </div>
 
-<!-- AUDIOS -->
+<!-- AUDIOS (🔸 TROCAR AQUI: serj.mp3 e notif.mp3) -->
 <audio id="serjAudio" src="serj.mp3" preload="auto"></audio>
 <audio id="notifAudio" src="notif.mp3" preload="auto"></audio>
 
 <script>
-/* ---------------- CONFIG ---------------- */
+/* ------------- CONFIG ------------- */
 const ASSETS = {
   serjAudioId: 'serjAudio',
   notifAudioId: 'notifAudio',
   tomImg: 'tomatinho.jpg'
 };
-/* -------------- ELEMENTS -------------- */
+/* ---------- ELEMENTS ---------- */
 const startScreen = document.getElementById('startScreen');
 const startBtn = document.getElementById('startBtn');
 const app = document.getElementById('app');
 const stage = document.getElementById('stage');
-let cards = Array.from(stage.querySelectorAll('.card')); // bottom -> top ordering
-let topIndex = cards.length - 1; // points to current top (kogos initially)
+let cards = Array.from(stage.querySelectorAll('.card')); // bottom -> top
+let topIndex = cards.length - 1; // current top (kogos)
 const btnLike = document.getElementById('btnLike');
 const btnNope = document.getElementById('btnNope');
 const match = document.getElementById('match');
@@ -186,42 +198,42 @@ const alertBanner = document.getElementById('alertBanner');
 
 let audioUnlocked = false;
 
-/* ---------- Helpers ---------- */
+/* reduce serj volume (lower) and ensure not looping */
+try{ serjAudio.volume = 0.35; serjAudio.loop = false; }catch(e){}
+
+/* ---------- helpers ---------- */
 function updateStackVisual(){
-  cards.forEach((el, idx)=>{
+  cards.forEach((el, idx) => {
     const pos = idx - topIndex;
     if(pos < 0){
       el.style.transform = 'translateX(-2000px)';
       el.style.opacity = '0';
     } else {
       const ty = pos * 8;
-      const scale = 1 - pos*0.01;
+      const scale = 1 - pos * 0.01;
       el.style.transition = 'transform .28s ease, opacity .28s ease';
       el.style.transform = `translateY(${ty}px) scale(${scale})`;
       el.style.opacity = '1';
-      el.style.zIndex = String(100-pos);
+      el.style.zIndex = String(100 - pos);
     }
   });
 }
-
 function unlockAudio(){
   if(!audioUnlocked){
     audioUnlocked = true;
-    // try play/pause to unlock mobile browsers
     serjAudio.play().then(()=>serjAudio.pause()).catch(()=>{});
     notifAudio.play().then(()=>notifAudio.pause()).catch(()=>{});
   }
 }
-
 function showAlert(text){
   alertBanner.textContent = text || 'ALERTA — NÃO É O TUMATI';
   alertBanner.classList.add('show');
   setTimeout(()=> alertBanner.classList.remove('show'), 2000);
 }
 
-/* ---------- Swipe (drag) ---------- */
+/* ---------- swipe (drag) ---------- */
 let pointer = {down:false,sx:0,sy:0,cx:0,cy:0};
-const TH = 90; // threshold to trigger swipe
+const TH = 90;
 function getTopCard(){ return cards[topIndex]; }
 
 function onPointerDown(e){
@@ -257,28 +269,38 @@ function onPointerUp(){
     top.style.transition = 'transform .5s cubic-bezier(.2,.9,.3,1), opacity .4s ease';
     top.style.transform = `translateX(${offX}px) rotate(${dir==='right'?18:-18}deg)`;
     top.style.opacity = 0;
-    // handle after animation
+
+    // We wait the animation end before deciding to play Serj or alert.
     setTimeout(()=>{
       const id = top.dataset.id;
-      // if liked non-tom => alert threatening
+      // if liked non-tom => alert
       if(dir === 'right' && id !== 'tom'){
         showAlert('ALERTA — NÃO É O TUMATI');
       }
+      // if leaving serj, stop audio immediately
       if(id === 'serj'){
         try{ serjAudio.pause(); serjAudio.currentTime = 0; }catch(e){}
       }
-      // match if liked tom
+      // if liked tom, show match
       if(id === 'tom' && dir === 'right'){
         setTimeout(()=> match.classList.add('show'), 380);
       }
+      // decrement stack
       topIndex--;
       updateStackVisual();
+
+      // NOW: if the new top is serj, play the serj audio ONCE and add fade-in class
       const newTop = cards[topIndex];
       if(newTop && newTop.dataset.id === 'serj' && audioUnlocked){
+        // visual fade-in
+        newTop.classList.remove('fade-in');
+        void newTop.offsetWidth; // force reflow
+        newTop.classList.add('fade-in');
+        // play once (volume already set)
         serjAudio.currentTime = 0;
-        serjAudio.play().catch(()=>{});
+        serjAudio.play().catch(()=>{ /* ignore */ });
       }
-    }, 420);
+    }, 460);
   } else {
     // revert
     top.style.transition = 'transform .28s cubic-bezier(.2,.9,.3,1)';
@@ -287,7 +309,7 @@ function onPointerUp(){
   }
 }
 
-/* Attach pointer events */
+/* attach pointer events */
 stage.addEventListener('pointerdown', onPointerDown, {passive:true});
 stage.addEventListener('pointermove', onPointerMove, {passive:true});
 window.addEventListener('pointerup', onPointerUp);
@@ -295,18 +317,16 @@ stage.addEventListener('touchstart', onPointerDown, {passive:true});
 stage.addEventListener('touchmove', onPointerMove, {passive:true});
 window.addEventListener('touchend', onPointerUp);
 
-/* ---------- Buttons (simulate swipe) ---------- */
+/* ---------- buttons (simulate swipe) ---------- */
 function removeTop(direction){
   const top = getTopCard();
   if(!top) return;
-  // if leaving serj, stop audio
-  if(top.dataset.id === 'serj'){ try{ serjAudio.pause(); serjAudio.currentTime=0; }catch(e){} }
+  if(top.dataset.id === 'serj'){ try{ serjAudio.pause(); serjAudio.currentTime = 0; }catch(e){} }
   const offX = (direction==='right') ? window.innerWidth*1.4 : -window.innerWidth*1.4;
   top.style.transition = 'transform .45s cubic-bezier(.2,.9,.3,1), opacity .36s ease';
   top.style.transform = `translateX(${offX}px) rotate(${direction==='right'?18:-18}deg)`;
   top.style.opacity = 0;
   setTimeout(()=>{
-    // if liked non-tom => alert
     if(direction === 'right' && top.dataset.id !== 'tom'){
       showAlert('ALERTA — NÃO É O TUMATI');
     }
@@ -317,6 +337,9 @@ function removeTop(direction){
     updateStackVisual();
     const newTop = cards[topIndex];
     if(newTop && newTop.dataset.id === 'serj' && audioUnlocked){
+      newTop.classList.remove('fade-in');
+      void newTop.offsetWidth;
+      newTop.classList.add('fade-in');
       serjAudio.currentTime = 0;
       serjAudio.play().catch(()=>{});
     }
@@ -325,29 +348,27 @@ function removeTop(direction){
 btnLike.addEventListener('click', ()=> removeTop('right'));
 btnNope.addEventListener('click', ()=> removeTop('left'));
 
-/* ---------- Start / audio unlock ---------- */
+/* ---------- start / audio unlock ---------- */
 startBtn.addEventListener('click', ()=>{
   unlockAudio();
   startScreen.style.display = 'none';
   app.setAttribute('aria-hidden','false');
   updateStackVisual();
-  // initial top is kogos, so serj not auto-play until it becomes top
 });
 
-/* ---------- Match -> Chat (typing -> notif -> message) ---------- */
+/* ---------- match -> chat (typing -> notif -> message) ---------- */
 openChat.addEventListener('click', ()=>{
   match.classList.remove('show');
   chat.classList.add('show');
   chat.setAttribute('aria-hidden','false');
-  // avatar auto set
   document.getElementById('chatAvatar').src = ASSETS.tomImg;
-  // show typing, then notif sound, then final message
   typingBubble.style.display = 'flex';
   finalMsg.style.display = 'none';
   setTimeout(()=>{
     typingBubble.style.display = 'none';
     if(audioUnlocked){
-      try{ notifAudio.currentTime = 0; notifAudio.play().catch(()=>{}); }catch(e){}
+      notifAudio.currentTime = 0;
+      notifAudio.play().catch(()=>{});
     }
     finalMsg.style.display = 'block';
     finalMsg.style.opacity = '0';
@@ -363,11 +384,9 @@ document.getElementById('closeChat').addEventListener('click', ()=>{
 });
 
 /* init */
-window.addEventListener('load', ()=>{
-  updateStackVisual();
-});
+window.addEventListener('load', ()=> updateStackVisual());
 
-/* keyboard testing */
+/* keyboard testing (desktop) */
 window.addEventListener('keydown', (e)=>{
   if(e.key === 'ArrowRight') removeTop('right');
   if(e.key === 'ArrowLeft') removeTop('left');
