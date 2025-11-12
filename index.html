@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>bãnbou — 6 meses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --y: #ffb300;
+      --bg: #fffaf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      font-family: Inter, system-ui, sans-serif;
+      color: #111;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 420px;
+      background: var(--y);
+      border-radius: 16px;
+      padding: .5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
+      margin-bottom: 1rem;
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      height: 70vh;
+    }
+
+    .card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      transition: transform .3s ease, opacity .3s ease;
+      background: #fff;
+    }
+
+    .card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .info {
+      position: relative;
+      z-index: 2;
+      padding: 1rem;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,.6));
+      color: #fff;
+    }
+
+    .controls {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: none;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,.12);
+      font-size: 1.6rem;
+      cursor: pointer;
+    }
+
+    .btn.like { color: #2ecc71; }
+    .btn.nope { color: #ff5c5c; }
+
+    .match {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.7);
+      z-index: 100;
+    }
+
+    .match.show { display: flex; }
+
+    .match-box {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 14px;
+      text-align: center;
+      width: 90%;
+      max-width: 360px;
+    }
+
+    .match-photos {
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+      margin: 1rem 0;
+    }
+
+    .match-photos img {
+      width: 45%;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .chat {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 200;
+    }
+
+    .chat.show { display: flex; }
+
+    .chat-header {
+      background: linear-gradient(90deg, var(--y), #f8c64f);
+      padding: .8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-body {
+      flex: 1;
+      overflow: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    /* bolha da mensagem */
+    .bubble {
+      max-width: 85%;
+      padding: .8rem 1rem;
+      border-radius: 14px;
+      font-size: .95rem;
+      line-height: 1.4;
+      background: var(--y);
+      color: #111;
+      border-bottom-right-radius: 5px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeInMsg 0.8s ease forwards;
+      animation-delay: 0.4s;
+    }
+
+    @keyframes fadeInMsg {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bubble a {
+      color: #007aff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+  <header>
+    <!-- 🐝 LOGO PARÓDIA -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" width="180" height="50">
+      <rect x="0" y="0" width="420" height="120" rx="22" ry="22" fill="#ffb300"/>
+      <text x="40" y="75" font-family="Comic Sans MS, Comic Sans, cursive"
+            font-weight="700" font-size="56" fill="#111">bãnbou</text>
+      <g transform="translate(320,58)">
+        <ellipse cx="-14" cy="-12" rx="12" ry="6" fill="#fff8"/>
+        <ellipse cx="14" cy="-12" rx="12" ry="6" fill="#fff8"/>
+        <ellipse cx="0" cy="0" rx="20" ry="14" fill="#111"/>
+        <rect x="-10" y="-10" width="6" height="20" rx="2" fill="#ffb300"/>
+        <rect x="4" y="-10" width="6" height="20" rx="2" fill="#ffb300"/>
+        <circle cx="8" cy="-3" r="1.8" fill="#fff"/>
+        <path d="M-6,-12 C -8,-20 -2,-22 0,-16"
+              stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M0,-12 C 4,-20 10,-22 8,-16"
+              stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </header>
+
+  <!-- 🔸 DECK DE PERFIS -->
+  <div class="stage" id="stage">
+
+    <div class="card" data-id="tom" style="z-index:1">
+      <img src="tomatinho.jpg" alt="Tomatinho">
+      <div class="info">
+        <h3>Tomatinho, 26</h3>
+        <p>Fez este site por amor (e ironia). Na dúvida, escolha o Nabinho.</p>
+      </div>
+    </div>
+
+    <div class="card" data-id="joe" style="z-index:2">
+      <img src="joe.jpg" alt="Joe Duplantier">
+      <div class="info">
+        <h3>Joe Duplantier, 44</h3>
+        <p>Gojira vibes — riffs e intensidade emocional.</p>
+      </div>
+    </div>
+
+    <div class="card" data-id="kogos" style="z-index:3">
+      <img src="kogos.jpg" alt="Paulo Kogos">
+      <div class="info">
+        <h3>Paulo Kogos, 39</h3>
+        <p>Perfil satírico — ideias e caos controlado.</p>
+      </div>
+    </div>
+
+    <div class="card" data-id="serj" style="z-index:4">
+      <img src="serj.jpg" alt="Serj Tankian">
+      <div class="info">
+        <h3>Serj Tankian, 57</h3>
+        <p>Voz e ideias — paixões musicais que confundem o algoritmo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLES -->
+  <div class="controls">
+    <button class="btn nope" id="btnNope">❌</button>
+    <button class="btn like" id="btnLike">❤️</button>
+  </div>
+</div>
+
+<!-- MATCH -->
+<div class="match" id="match">
+  <div class="match-box">
+    <h2>It's a Match 💛</h2>
+    <p>O algoritmo do bãnbou é infalível.</p>
+
+    <div class="match-photos">
+      <img src="lara.jpg" alt="Lara">
+      <img src="tomatinho.jpg" alt="Tomatinho">
+    </div>
+
+    <button class="btn" id="openChat"
+            style="background:var(--y);padding:.6rem 1rem;border-radius:10px;border:none;cursor:pointer;font-weight:600">
+      Ver mensagem
+    </button>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div class="chat" id="chat">
+  <div class="chat-header">
+    Mensagem recebida
+    <button id="closeChat" style="border:none;background:transparent;font-size:1.2rem;cursor:pointer">✕</button>
+  </div>
+
+  <div class="chat-body" id="chatBody">
+    <div class="bubble">
+      oi, aqui é o <s>careca</s> cabeludo que gosta de Gojira e System of a Down —
+      me chama no zap
+      <a href="https://wa.me/559912345678" target="_blank">91234-5678</a> 😎
+    </div>
+  </div>
+</div>
+
+<!-- ÁUDIO -->
+<audio id="serjAudio" src="serj.mp3" preload="auto"></audio>
+
+<script>
+  const cards = [...document.querySelectorAll('.card')];
+  const btnLike = document.getElementById('btnLike');
+  const btnNope = document.getElementById('btnNope');
+  const match = document.getElementById('match');
+  const openChat = document.getElementById('openChat');
+  const chat = document.getElementById('chat');
+  const closeChat = document.getElementById('closeChat');
+  const audio = document.getElementById('serjAudio');
+  let i = cards.length - 1;
+
+  function nextCard(dir) {
+    if (i < 0) return;
+    const c = cards[i];
+    if (c.dataset.id === 'serj') {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    c.style.transform = `translateX(${dir === 'right' ? 500 : -500}px) rotate(${dir === 'right' ? 15 : -15}deg)`;
+    c.style.opacity = 0;
+
+    if (c.dataset.id === 'tom' && dir === 'right') {
+      setTimeout(() => match.classList.add('show'), 400);
+    }
+
+    i--;
+    if (cards[i] && cards[i].dataset.id === 'serj') {
+      audio.play();
+    }
+  }
+
+  btnLike.onclick = () => nextCard('right');
+  btnNope.onclick = () => nextCard('left');
+
+  openChat.onclick = () => {
+    match.classList.remove('show');
+    chat.classList.add('show');
+  };
+
+  closeChat.onclick = () => chat.classList.remove('show');
+
+  window.onload = () => {
+    if (cards[i] && cards[i].dataset.id === 'serj') {
+      audio.play();
+    }
+  };
+</script>
+</body>
+</html>
