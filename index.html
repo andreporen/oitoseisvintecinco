@@ -10,7 +10,6 @@ body{
   font-family:'Comic Sans MS',sans-serif;
   background:#fffbee;
   overflow:hidden;
-  touch-action:pan-y;
 }
 #app{
   position:relative;
@@ -51,20 +50,8 @@ body{
   max-width:80%;
   box-shadow:0 3px 6px rgba(0,0,0,0.1);
   display:none;
-  font-size:0.95rem;
 }
 .message-bubble.show{display:block;}
-.alerta{
-  position:absolute;
-  top:8%;
-  left:50%;
-  transform:translateX(-50%);
-  color:#ff2c2c;
-  font-weight:bold;
-  font-size:1.1rem;
-  display:none;
-}
-.alerta.show{display:block;}
 </style>
 </head>
 <body>
@@ -74,21 +61,15 @@ body{
   <div class="card" id="joe"><img src="joe.jpg" alt="Joe Duplantier"></div>
   <div class="card" id="tomatinho"><img src="tomatinho.jpg" alt="Tomatinho"></div>
   <div class="message-bubble" id="message">
-    oi, aqui é o <s>careca</s> cabeludo que gosta de gojira e system of a down, me chama no zap 
-    <a href="#" style="color:#007bff;text-decoration:none;">91234-5678</a>
+    oi, aqui é o <s>careca</s> cabeludo que gosta de gojira e system of a down,
+    me chama no zap <a href="#" style="color:#007bff;text-decoration:none;">91234-5678</a>
   </div>
-  <div class="alerta" id="alerta">⚠️ ALERTA: NÃO É O TUMATI ⚠️</div>
 </div>
 
 <script>
-const cards = [...document.querySelectorAll('.card')];
-const message = document.getElementById('message');
-const alerta = document.getElementById('alerta');
-let current = 0;
-
-// --- ÁUDIO CONTROLADO (funciona no iOS) ---
+// --- ÁUDIO com WebAudio API (compatível com iOS) ---
 let serjCtx, serjGain, serjSource;
-async function playSerj() {
+async function playSerjAudio() {
   try {
     serjCtx = new (window.AudioContext || window.webkitAudioContext)();
     const response = await fetch('serj.mp3');
@@ -106,73 +87,44 @@ async function playSerj() {
 
     serjSource.start(0);
 
-    // fade-in suave até 0.6
+    // Fade-in suave até volume 0.6
     let current = 0;
-    const fade = setInterval(()=>{
+    const fade = setInterval(() => {
       current += 0.05;
-      if(current >= 0.6){ current = 0.6; clearInterval(fade); }
+      if (current >= 0.6) { current = 0.6; clearInterval(fade); }
       serjGain.gain.value = current;
-    },100);
-  } catch(e) {
-    console.error("Erro ao tocar áudio:", e);
+    }, 100);
+  } catch (err) {
+    console.error("Erro ao tocar serj.mp3:", err);
   }
 }
 
-// --- GESTO DE SWIPE ---
-let startX = 0;
-let isSwiping = false;
+// --- Lógica dos cards (versão original simplificada) ---
+const cards = [...document.querySelectorAll('.card')];
+const message = document.getElementById('message');
+let current = 0;
 
-function onStart(e){
-  startX = e.touches ? e.touches[0].clientX : e.clientX;
-  isSwiping = true;
-}
+function swipeCard() {
+  if (current < cards.length) {
+    cards[current].style.transform = 'translateX(-120%) rotate(-10deg)';
+    cards[current].style.opacity = '0';
+    setTimeout(() => (cards[current].style.display = 'none'), 300);
 
-function onMove(e){
-  if(!isSwiping) return;
-  const x = e.touches ? e.touches[0].clientX : e.clientX;
-  const dx = x - startX;
-  const card = cards[current];
-  if(card) card.style.transform = `translateX(${dx}px) rotate(${dx/20}deg)`;
-}
-
-function onEnd(e){
-  if(!isSwiping) return;
-  isSwiping = false;
-  const x = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
-  const dx = x - startX;
-  const card = cards[current];
-  if(!card) return;
-
-  if(Math.abs(dx) > 80){
-    // swipe pra fora
-    const dir = dx > 0 ? 120 : -120;
-    card.style.transform = `translateX(${dir}%) rotate(${dir/10}deg)`;
-    card.style.opacity = '0';
-    setTimeout(()=>card.style.display='none',300);
-    
-    if(current === 0){ // Kogos -> Serj
-      alerta.classList.add('show');
-      playSerj();
-      setTimeout(()=>alerta.classList.remove('show'), 2000);
+    if (current === 0) {
+      // Quando sai o Kogos, toca o áudio do Serj
+      playSerjAudio();
     }
 
-    if(current === 2){ // depois do Joe -> Tomatinho
-      setTimeout(()=>message.classList.add('show'), 800);
+    if (current === 2) {
+      // Depois do Joe, mostra mensagem
+      setTimeout(() => message.classList.add('show'), 600);
     }
 
     current++;
-  } else {
-    // volta ao centro
-    card.style.transform = '';
   }
 }
 
-document.body.addEventListener('mousedown', onStart);
-document.body.addEventListener('touchstart', onStart);
-document.body.addEventListener('mousemove', onMove);
-document.body.addEventListener('touchmove', onMove);
-document.body.addEventListener('mouseup', onEnd);
-document.body.addEventListener('touchend', onEnd);
+document.body.addEventListener('click', swipeCard);
 </script>
 </body>
 </html>
