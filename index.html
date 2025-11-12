@@ -1,414 +1,203 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>bãnbou</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>pra minha lalinha</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{--y:#ffb300;--bg:#fffaf8;--danger:#c62828}
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111}
-  /* START */
-  .start-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fffaf8,#fff4e6);z-index:900}
-  .start-box{background:#fff;padding:24px;border-radius:14px;max-width:92vw;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.12)}
-  .start-btn{background:var(--y);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
-  /* APP */
-  .app{display:flex;flex-direction:column;align-items:center;padding:12px 12px 40px}
-  header{width:100%;max-width:420px;margin-top:8px;margin-bottom:12px}
-  .logo{display:flex;align-items:center;gap:10px;justify-content:center}
-  /* ALERT BANNER (ameaçador) */
-  .alert-banner{position:fixed;top:12px;left:50%;transform:translateX(-50%) translateY(-120%);background:var(--danger);color:#fff;padding:14px 20px;border-radius:10px;font-weight:800;letter-spacing:1px;z-index:950;box-shadow:0 10px 30px rgba(0,0,0,.28);opacity:0;transition:transform .28s cubic-bezier(.2,.9,.2,1),opacity .28s ease}
-  .alert-banner.show{transform:translateX(-50%) translateY(0);opacity:1;animation:shake .5s}
-  @keyframes shake{10%{transform:translateX(-50%) translateY(0) rotate(-1.5deg)}30%{transform:translateX(-50%) translateY(0) rotate(1.5deg)}50%{transform:translateX(-50%) translateY(0) rotate(-1deg)}70%{transform:translateX(-50%) translateY(0) rotate(1deg)}90%{transform:translateX(-50%) translateY(0) rotate(-.5deg)}}
-  /* DECK */
-  .stage{position:relative;width:100%;max-width:420px;height:68vh}
-  .card{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 14px 36px rgba(0,0,0,.12);display:flex;flex-direction:column;justify-content:flex-end;transition:transform .36s ease,opacity .36s ease;touch-action:none}
-  .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .info{position:relative;z-index:2;padding:16px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.6));color:#fff}
-  .info h3{margin:0 0 6px}
-  .info p{margin:0;color:#eee;font-size:.95rem}
-  .controls{display:flex;gap:36px;justify-content:center;margin-top:12px}
-  .btn{width:64px;height:64px;border-radius:50%;border:none;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.12);font-size:1.6rem;cursor:pointer}
-  .btn.nope{color:#ff5c5c}.btn.like{color:#27ae60}
-  /* Fade-in visual when a card becomes active (we add class .fade-in) */
-  .card.fade-in{animation:cardFadeIn .36s ease both}
-  @keyframes cardFadeIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
-  /* MATCH */
-  .match{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);z-index:800}
-  .match.show{display:flex}
-  .match-box{background:#fff;padding:16px;border-radius:12px;text-align:center;width:92%;max-width:380px}
-  .match-photos{display:flex;gap:8px;justify-content:center;margin:12px 0}
-  .match-photos img{width:46%;border-radius:10px;object-fit:cover}
-  /* CHAT */
-  .chat{position:fixed;inset:0;display:none;flex-direction:column;background:#fff;z-index:820}
-  .chat.show{display:flex}
-  .chat-header{display:flex;align-items:center;gap:12px;padding:12px;background:linear-gradient(90deg,var(--y),#f7c96a);font-weight:700}
-  .chat-avatar{width:44px;height:44px;border-radius:10px;overflow:hidden;flex:0 0 44px}
-  .chat-title{display:flex;flex-direction:column}
-  .chat-title .name{font-weight:700}
-  .chat-title .status{font-size:.85rem;color:#333;opacity:.95}
-  .chat-body{flex:1;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:10px}
-  .typing-bubble{align-self:flex-start;background:#f0f0f0;color:#111;padding:8px 12px;border-radius:14px;border-bottom-left-radius:6px;display:flex;align-items:center;gap:8px}
-  .dots{width:32px;display:flex;gap:4px;align-items:center}
-  .dot{width:6px;height:6px;border-radius:50%;background:#bbb;opacity:.7;transform:translateY(0);animation:dot 1s infinite}
-  .dot:nth-child(2){animation-delay:.12s}.dot:nth-child(3){animation-delay:.24s}
-  @keyframes dot{0%{opacity:.2;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}100%{opacity:.2;transform:translateY(0)}}
-  .bubble-recv{align-self:flex-start;background:#fff;padding:12px;border-radius:14px;border:1px solid #eee;max-width:82%;color:#111}
-  .bubble-recv a{color:#007aff;text-decoration:none;font-weight:600}
-  .chat-close{margin-left:auto;border:none;background:transparent;font-size:1.2rem;cursor:pointer}
-  @media(min-width:520px){.stage{height:72vh}.card{border-radius:20px}}
+  :root {--bg:#000;--text:#fff;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{
+    height:100%;width:100%;
+    background:var(--bg);color:var(--text);
+    font-family:'Inter',sans-serif;
+    overflow:hidden;display:flex;align-items:center;justify-content:center;
+  }
+  #start{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:#000;z-index:10;flex-direction:column;
+  }
+  #start button{
+    font-size:1.1rem;font-weight:600;
+    color:#000;background:#fff;border:none;border-radius:8px;
+    padding:14px 32px;cursor:pointer;transition:transform .3s ease;
+  }
+  #start button:hover{transform:scale(1.05);}
+  .stage{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;overflow:hidden;
+  }
+  .img-bg{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    z-index:0;
+  }
+  .img-bg img{
+    width:85%;max-width:800px;border-radius:10px;
+    opacity:0;transition:opacity 2s ease;
+    box-shadow:0 30px 80px rgba(0,0,0,.6);
+  }
+  .img-bg img.show{opacity:1;}
+  .overlay{
+    position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(0,0,0,0.5),rgba(0,0,0,0.9));
+    z-index:1;pointer-events:none;
+  }
+  .text{
+    position:relative;
+    z-index:2;
+    font-size:1.2rem;
+    text-align:center;
+    width:90%;
+    max-width:700px;
+    color:#fff;
+    text-shadow:0 0 8px rgba(0,0,0,0.8);
+    height:5em;
+  }
+  .fade-end{
+    position:absolute;inset:0;
+    background:#000;
+    opacity:0;transition:opacity 2s ease;
+    z-index:5;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;
+  }
+  .fade-end.show{opacity:1;}
+  .final-text{
+    font-size:1.2rem;
+    opacity:0;
+    color:#fff;
+    font-weight:600;
+    letter-spacing:0.5px;
+    animation:fadeInText 6s ease forwards;
+    animation-delay:1s;
+    white-space:pre-line;
+    text-align:center;
+  }
+  @keyframes fadeInText{to{opacity:1;}}
+  @media(max-width:600px){
+    .text{font-size:1rem;}
+    .img-bg img{width:92%;}
+  }
 </style>
 </head>
 <body>
 
-<!-- ALERT BANNER -->
-<div id="alertBanner" class="alert-banner" role="status" aria-live="assertive">ALERTA — NÃO É O TUMATI</div>
+<div id="start">
+  <button id="beginBtn">começar</button>
+</div>
 
-<!-- START SCREEN -->
-<div class="start-screen" id="startScreen" role="dialog" aria-modal="true">
-  <div class="start-box">
-    <h1>bem-vinda ao bãnbou 💛</h1>
-    <p>surpresa do tumate</p>
-    <button class="start-btn" id="startBtn">Começar</button>
+<div class="stage">
+  <div class="img-bg">
+    <img src="foto1.jpg" alt="">
+    <img src="foto2.jpg" alt="">
+    <img src="foto3.jpg" alt="">
+    <img src="foto4.jpg" alt="">
+    <img src="foto5.jpg" alt="">
+    <img src="foto6.jpg" alt="">
+  </div>
+  <div class="overlay"></div>
+  <div class="text" id="text"></div>
+  <div class="fade-end" id="fadeEnd">
+    <div class="final-text" id="finalText"></div>
   </div>
 </div>
 
-<!-- APP -->
-<div class="app" id="app" aria-hidden="true">
-  <header>
-    <div class="logo" aria-hidden>
-      <!-- inline logo paródia -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" width="180" height="50" role="img" aria-label="bãnbou">
-        <rect x="0" y="0" width="420" height="120" rx="22" ry="22" fill="#ffb300"/>
-        <text x="40" y="75" font-family="Comic Sans MS, Comic Sans, cursive" font-weight="700" font-size="56" fill="#111">bãnbou</text>
-        <g transform="translate(320,58)"><ellipse cx="-14" cy="-12" rx="12" ry="6" fill="#fff8"/><ellipse cx="14" cy="-12" rx="12" ry="6" fill="#fff8"/><ellipse cx="0" cy="0" rx="20" ry="14" fill="#111"/><rect x="-10" y="-10" width="6" height="20" rx="2" fill="#ffb300"/><rect x="4" y="-10" width="6" height="20" rx="2" fill="#ffb300"/><circle cx="8" cy="-3" r="1.8" fill="#fff"/><path d="M-6,-12 C -8,-20 -2,-22 0,-16" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M0,-12 C 4,-20 10,-22 8,-16" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/></g>
-      </svg>
-    </div>
-  </header>
-
-  <!-- DECK (DOM order: bottom->top: tom -> joe -> serj -> kogos) -->
-  <div class="stage" id="stage" aria-live="polite">
-    <!-- TOMATINHO (fundo) -->
-    <div class="card" data-id="tom" style="z-index:1">
-      <!-- 🔸 TROCAR AQUI: tomatinho.jpg -->
-      <img src="tomatinho.jpg" alt="Tomatinho">
-      <div class="info"><h3>Tomatinho, 19</h3><p>Ama a Lalinha em tempo integral. Apreciador de nabos.</p></div>
-    </div>
-
-    <!-- JOE -->
-    <div class="card" data-id="joe" style="z-index:2">
-      <!-- 🔸 TROCAR AQUI: joe.jpg -->
-      <img src="joe.jpg" alt="Joe Duplantier">
-      <div class="info"><h3>Joe Duplantier, 44</h3><p>oui oui madame baguette heavy metàl</p></div>
-    </div>
-
-    <!-- SERJ (2º) -->
-    <div class="card" data-id="serj" style="z-index:3">
-      <!-- 🔸 TROCAR AQUI: serj.jpg -->
-      <img src="serj.jpg" alt="Serj Tankian">
-      <div class="info"><h3>Serj Tankian, 57</h3><p>BANANA BANANA BANANA BANANA BANANA BANANA TERRACOTTA PIE</p></div>
-    </div>
-
-    <!-- KOGOS (topo inicial) -->
-    <div class="card" data-id="kogos" style="z-index:4">
-      <!-- 🔸 TROCAR AQUI: kogos.jpg -->
-      <img src="kogos.jpg" alt="Paulo Kogos">
-      <div class="info"><h3>Paulo Kogos, 39</h3><p>perfil desativado - em relacionamento sério com nando moura</p></div>
-    </div>
-  </div>
-
-  <div class="controls" aria-hidden>
-    <button class="btn nope" id="btnNope" aria-label="Nope">❌</button>
-    <button class="btn like" id="btnLike" aria-label="Like">❤️</button>
-  </div>
-</div>
-
-<!-- MATCH -->
-<div class="match" id="match" role="dialog" aria-hidden="true">
-  <div class="match-box">
-    <h2>It's a Match 💛</h2>
-    <p>O algoritmo do bãnbou é infalível.</p>
-    <div class="match-photos">
-      <!-- 🔸 TROCAR AQUI: lara.jpg -->
-      <img src="lara.jpg" alt="Lara">
-      <!-- 🔸 TROCAR AQUI: tomatinho.jpg -->
-      <img src="tomatinho.jpg" alt="Tomatinho">
-    </div>
-    <button class="btn" id="openChat" style="background:var(--y);padding:.6rem 1rem;border-radius:10px;border:none;cursor:pointer;font-weight:600">Ver mensagem</button>
-  </div>
-</div>
-
-<!-- CHAT -->
-<div class="chat" id="chat" role="dialog" aria-hidden="true">
-  <div class="chat-header">
-    <div class="chat-avatar"><img id="chatAvatar" src="tomatinho.jpg" alt="Tomatinho" style="width:100%;height:100%;object-fit:cover"></div>
-    <div class="chat-title"><div class="name">Tomatinho</div><div class="status">ativo agora 💛</div></div>
-    <button class="chat-close" id="closeChat" aria-label="Fechar chat">✕</button>
-  </div>
-  <div class="chat-body" id="chatBody">
-    <!-- typing -->
-    <div class="typing-bubble" id="typingBubble" style="display:none">
-      <div class="dots" aria-hidden><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-      <div style="font-size:.9rem;color:#555">digitando…</div>
-    </div>
-    <div class="bubble-recv" id="finalMsg" style="display:none">
-      oi, aqui é o <s>careca</s> cabeludo que gosta de Gojira e System of a Down 
-      me chama no zap <a id="waLink" href="https://teamolarinha.vercel.app" target="_blank">91234-5678</a> 😎
-    </div>
-  </div>
-</div>
-
-<!-- AUDIOS (🔸 TROCAR AQUI: serj.mp3 e notif.mp3) -->
-<audio id="serjAudio" src="serj.mp3" preload="auto"></audio>
-<audio id="notifAudio" src="notif.mp3" preload="auto"></audio>
+<audio id="bgAudio" src="musica.mp3" preload="auto"></audio>
 
 <script>
-/* ------------- CONFIG ------------- */
-const ASSETS = {
-  serjAudioId: 'serjAudio',
-  notifAudioId: 'notifAudio',
-  tomImg: 'tomatinho.jpg'
-};
-/* ---------- ELEMENTS ---------- */
-const startScreen = document.getElementById('startScreen');
-const startBtn = document.getElementById('startBtn');
-const app = document.getElementById('app');
-const stage = document.getElementById('stage');
+const btn = document.getElementById('beginBtn');
+const startScreen = document.getElementById('start');
+const audio = document.getElementById('bgAudio');
+const textEl = document.getElementById('text');
+const imgs = [...document.querySelectorAll('.img-bg img')];
+const fadeEnd = document.getElementById('fadeEnd');
+const finalText = document.getElementById('finalText');
 
-/* IMPORTANT: build cards array SORTED by style z-index
-   This guarantees the order (bottom->top) even on iOS where DOM order may act differently.
-   Ensure your HTML sets inline style z-index per card as in the template.
-*/
-let cards = Array.from(stage.querySelectorAll('.card'))
-  .sort((a,b) => Number(a.style.zIndex || 0) - Number(b.style.zIndex || 0)); // bottom->top
-let topIndex = cards.length - 1; // current top (kogos initially)
+const totalDuration = 110000; // 1m50s
+const fadeOutDuration = 5000;
+const imgCount = imgs.length;
+const imgInterval = totalDuration / imgCount;
 
-const btnLike = document.getElementById('btnLike');
-const btnNope = document.getElementById('btnNope');
-const match = document.getElementById('match');
-const openChat = document.getElementById('openChat');
-const chat = document.getElementById('chat');
-const typingBubble = document.getElementById('typingBubble');
-const finalMsg = document.getElementById('finalMsg');
-const serjAudio = document.getElementById(ASSETS.serjAudioId);
-const notifAudio = document.getElementById(ASSETS.notifAudioId);
-const alertBanner = document.getElementById('alertBanner');
+const typeSpeed = 45;
+const eraseSpeed = 30;
+const pauseTime = 2500;
 
-let audioUnlocked = false;
+const messages = [
+  "pra minha lalinha.\nou larovski. namurada. paixão. amô. nabinho.",
+  "é tão leve com você que até parece estranho tentar escrever algo sério.\nparece que nos conhecemos há tanto tempo que até esqueço que teve um antes.",
+  "seis meses, paixão.\nseis meses que a gente se tem e a minha vida já não existe mais sem você dentro dela.",
+  "penso nas viagens que ainda temos pra fazer,\nnos filmes que prometemos ver e sempre deixamos pra depois.",
+  "você me faz sentir inteiro.\nmais que isso, compreendido.\nme sinto no meu lugar. contigo.",
+  "te amo mais que tudo, paixão."
+];
 
-/* reduce serj volume and no loop */
-try{ serjAudio.volume = 0.35; serjAudio.loop = false; }catch(e){}
+const finalMessage = "obrigado por existir.\npor ser lar.\npor ser minha paz.\n\n— seu eterno tomatinho";
 
-/* ---------- helpers ---------- */
-function updateStackVisual(){
-  cards.forEach((el, idx) => {
-    const pos = idx - topIndex;
-    if(pos < 0){
-      el.style.transform = 'translateX(-2000px)';
-      el.style.opacity = '0';
-    } else {
-      const ty = pos * 8;
-      const scale = 1 - pos * 0.01;
-      el.style.transition = 'transform .28s ease, opacity .28s ease';
-      el.style.transform = `translateY(${ty}px) scale(${scale})`;
-      el.style.opacity = '1';
-      el.style.zIndex = String(100 - pos);
-    }
-  });
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+async function typeText(msg){
+  textEl.textContent = "";
+  for(let char of msg){ textEl.textContent += char; await wait(typeSpeed);}
+  await wait(pauseTime);
+  for(let i=msg.length;i>=0;i--){ textEl.textContent = msg.slice(0,i); await wait(eraseSpeed);}
 }
 
-/* Use Web Audio API resume to unlock audio on user interaction (iOS friendly).
-   We DO NOT play notifAudio here — only resume the context so later .play() calls work.
-*/
-let audioCtx = null;
-function unlockAudio(){
-  if(!audioUnlocked){
-    audioUnlocked = true;
-    // try to create/resume an AudioContext — this helps iOS allow later playback
-    try {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
-    } catch(e){}
-    // do NOT play notif here; app will play sounds only on explicit actions below
-  }
+// música
+function fadeAudio(from,to,duration){
+  const steps = Math.max(8, Math.round(duration/100));
+  let i=0;
+  const iv=setInterval(()=>{
+    i++;
+    audio.volume = from+(to-from)*(i/steps);
+    if(i>=steps) clearInterval(iv);
+  }, duration/steps);
+}
+function fadeOutMusic(){
+  const from = audio.volume;
+  const steps = Math.max(8, Math.round(fadeOutDuration/100));
+  let i=0;
+  const iv = setInterval(()=>{
+    i++;
+    audio.volume = from*(1 - i/steps);
+    if(i>=steps){ audio.volume=0; audio.pause(); clearInterval(iv);}
+  }, fadeOutDuration/steps);
 }
 
-function showAlert(text){
-  alertBanner.textContent = text || 'ALERTA — NÃO É O TUMATI';
-  alertBanner.classList.add('show');
-  setTimeout(()=> alertBanner.classList.remove('show'), 2000);
+async function keepAwake(){
+  try { if('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch(e){}
 }
 
-/* ---------- swipe (drag) ---------- */
-let pointer = {down:false,sx:0,sy:0,cx:0,cy:0};
-const TH = 90;
-function getTopCard(){ return cards[topIndex]; }
+async function startShow(){
+  keepAwake();
+  startScreen.style.display='none';
+  try { await audio.play(); } catch(e){}
+  fadeAudio(0,0.45,1500);
 
-function onPointerDown(e){
-  pointer.down = true;
-  const p = e.touches?e.touches[0]:e;
-  pointer.sx = p.clientX; pointer.sy = p.clientY; pointer.cx = pointer.sx; pointer.cy = pointer.sy;
-  const t = getTopCard();
-  if(t) t.style.transition = 'none';
-}
-function onPointerMove(e){
-  if(!pointer.down) return;
-  const p = e.touches?e.touches[0]:e;
-  pointer.cx = p.clientX; pointer.cy = p.clientY;
-  const dx = pointer.cx - pointer.sx;
-  const dy = pointer.cy - pointer.sy;
-  const top = getTopCard();
-  if(!top) return;
-  const rot = dx*0.06;
-  top.style.transform = `translateX(${dx}px) translateY(${dy*0.4}px) rotate(${rot}deg)`;
-  top.style.opacity = 1 - Math.min(Math.abs(dx)/800, .4);
-}
-function onPointerUp(){
-  if(!pointer.down) return;
-  pointer.down = false;
-  const dx = pointer.cx - pointer.sx;
-  const abs = Math.abs(dx);
-  const dir = dx > 0 ? 'right' : 'left';
-  const top = getTopCard();
-  if(!top) return;
-  if(abs > TH){
-    // fly out
-    const offX = (dir === 'right') ? window.innerWidth*1.4 : -window.innerWidth*1.4;
-    top.style.transition = 'transform .5s cubic-bezier(.2,.9,.3,1), opacity .4s ease';
-    top.style.transform = `translateX(${offX}px) rotate(${dir==='right'?18:-18}deg)`;
-    top.style.opacity = 0;
+  const startTime = performance.now();
 
-    // Wait the animation to finish (same timing as other flows)
+  // troca de imagem independente
+  imgs[0].classList.add('show');
+  for(let i=1;i<imgCount;i++){
     setTimeout(()=>{
-      const id = top.dataset.id;
-      // if liked non-tom => alert
-      if(dir === 'right' && id !== 'tom'){
-        showAlert('ALERTA — NÃO É O TUMATI');
-      }
-      // if leaving serj, stop audio immediately
-      if(id === 'serj'){
-        try{ serjAudio.pause(); serjAudio.currentTime = 0; }catch(e){}
-      }
-      // if liked tom, show match
-      if(id === 'tom' && dir === 'right'){
-        setTimeout(()=> match.classList.add('show'), 380);
-      }
-      // decrement stack
-      topIndex--;
-      updateStackVisual();
-
-      // NOW: if the new top is serj, play the serj audio ONCE and add fade-in class
-      const newTop = cards[topIndex];
-      if(newTop && newTop.dataset.id === 'serj' && audioUnlocked){
-        // visual fade-in
-        newTop.classList.remove('fade-in');
-        void newTop.offsetWidth; // force reflow
-        newTop.classList.add('fade-in');
-        // play once (volume already set)
-        serjAudio.currentTime = 0;
-        serjAudio.play().catch(()=>{ /* ignore */ });
-      }
-    }, 460);
-  } else {
-    // revert
-    top.style.transition = 'transform .28s cubic-bezier(.2,.9,.3,1)';
-    top.style.transform = 'translateY(0px) scale(1)';
-    top.style.opacity = 1;
+      imgs.forEach((img,idx)=>img.classList.toggle('show',idx===i));
+    }, i*imgInterval);
   }
+
+  // digitação sequencial
+  for(let i=0;i<messages.length;i++){
+    await typeText(messages[i]);
+  }
+
+  fadeEnd.classList.add('show');
+  fadeOutMusic();
+
+  finalText.textContent="";
+  for(let c of finalMessage){ finalText.textContent += c; await wait(70); }
 }
 
-/* attach pointer events */
-stage.addEventListener('pointerdown', onPointerDown, {passive:true});
-stage.addEventListener('pointermove', onPointerMove, {passive:true});
-window.addEventListener('pointerup', onPointerUp);
-stage.addEventListener('touchstart', onPointerDown, {passive:true});
-stage.addEventListener('touchmove', onPointerMove, {passive:true});
-window.addEventListener('touchend', onPointerUp);
-
-/* ---------- buttons (simulate swipe) ---------- */
-function removeTop(direction){
-  const top = getTopCard();
-  if(!top) return;
-  if(top.dataset.id === 'serj'){ try{ serjAudio.pause(); serjAudio.currentTime=0; }catch(e){} }
-  const offX = (direction==='right') ? window.innerWidth*1.4 : -window.innerWidth*1.4;
-  top.style.transition = 'transform .45s cubic-bezier(.2,.9,.3,1), opacity .36s ease';
-  top.style.transform = `translateX(${offX}px) rotate(${direction==='right'?18:-18}deg)`;
-  top.style.opacity = 0;
-  setTimeout(()=>{
-    if(direction === 'right' && top.dataset.id !== 'tom'){
-      showAlert('ALERTA — NÃO É O TUMATI');
-    }
-    if(top.dataset.id === 'tom' && direction === 'right'){
-      setTimeout(()=> match.classList.add('show'),380);
-    }
-    topIndex--;
-    updateStackVisual();
-    const newTop = cards[topIndex];
-    if(newTop && newTop.dataset.id === 'serj' && audioUnlocked){
-      newTop.classList.remove('fade-in');
-      void newTop.offsetWidth;
-      newTop.classList.add('fade-in');
-      serjAudio.currentTime = 0;
-      serjAudio.play().catch(()=>{});
-    }
-  },420);
-}
-btnLike.addEventListener('click', ()=> removeTop('right'));
-btnNope.addEventListener('click', ()=> removeTop('left'));
-
-/* ---------- start / audio unlock ---------- */
-startBtn.addEventListener('click', ()=>{
-  unlockAudio();
-  startScreen.style.display = 'none';
-  app.setAttribute('aria-hidden','false');
-
-  // rebuild cards array sorted by z-index (safety) and reset topIndex
-  cards = Array.from(stage.querySelectorAll('.card')).sort((a,b)=> Number(a.style.zIndex||0)-Number(b.style.zIndex||0));
-  topIndex = cards.length - 1;
-  updateStackVisual();
-});
-
-/* ---------- match -> chat (typing -> notif -> message) ---------- */
-openChat.addEventListener('click', ()=>{
-  match.classList.remove('show');
-  chat.classList.add('show');
-  chat.setAttribute('aria-hidden','false');
-  document.getElementById('chatAvatar').src = ASSETS.tomImg;
-  typingBubble.style.display = 'flex';
-  finalMsg.style.display = 'none';
-  setTimeout(()=>{
-    typingBubble.style.display = 'none';
-    // play notif only here (after explicit user gesture unlocked audio)
-    if(audioUnlocked){
-      try{ notifAudio.currentTime = 0; notifAudio.play().catch(()=>{}); }catch(e){}
-    }
-    finalMsg.style.display = 'block';
-    finalMsg.style.opacity = '0';
-    finalMsg.style.transform = 'translateY(8px)';
-    setTimeout(()=>{ finalMsg.style.transition = 'opacity .45s ease, transform .45s ease'; finalMsg.style.opacity = '1'; finalMsg.style.transform = 'translateY(0)'; },40);
-  },2000);
-});
-
-/* close chat */
-document.getElementById('closeChat').addEventListener('click', ()=>{
-  chat.classList.remove('show');
-  chat.setAttribute('aria-hidden','true');
-});
-
-/* init */
-window.addEventListener('load', ()=> {
-  // ensure cards sorted by z-index from the start
-  cards = Array.from(stage.querySelectorAll('.card')).sort((a,b)=> Number(a.style.zIndex||0)-Number(b.style.zIndex||0));
-  topIndex = cards.length - 1;
-  updateStackVisual();
-});
-
-/* keyboard testing (desktop) */
-window.addEventListener('keydown', (e)=>{
-  if(e.key === 'ArrowRight') removeTop('right');
-  if(e.key === 'ArrowLeft') removeTop('left');
-});
+btn.onclick = ()=>startShow();
 </script>
 </body>
 </html>
